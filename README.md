@@ -1,8 +1,8 @@
 # 42seoul  
 
 ## information  
->> ID : kiyoon  
->> since Sep 2021
+> ID : kiyoon  
+> since Sep 2021
 
 ## complete task
 * libft
