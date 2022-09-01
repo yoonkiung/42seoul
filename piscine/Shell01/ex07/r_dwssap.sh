@@ -1,0 +1,1 @@
+cat /etc/passwd | sed '/#/d' | awk '{if (NR != 1) print}' | awk -F ':' '{print $1}' | rev | sort -r | awk '{if(NR>='"$FT_LINE1"' && NR<='"$FT_LINE2"') print}' | awk '{print($1",")}' | xargs echo | sed 's/,$/./g' | tr -d '\n'
