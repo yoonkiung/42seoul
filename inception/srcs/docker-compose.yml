@@ -1,0 +1,68 @@
+version: '3'
+
+volumes:
+    vol_wordpress:
+        driver_opts:
+            type: none
+            device: /home/kiyoon/data/wordpress
+            o: bind
+    vol_mariadb:
+        driver_opts:
+            type: none
+            device: /home/kiyoon/data/mariadb
+            o: bind
+
+services:
+    nginx:
+        build:
+            context: ./requirements/nginx
+            dockerfile: ./Dockerfile
+        container_name: nginx
+        image: nginx
+        depends_on:
+            - wordpress
+        ports:
+            - "443:443"
+        restart: "always"
+        env_file:
+            - .env
+        volumes:
+            - vol_wordpress:/var/www/html/
+        networks:
+            - gaepo
+    wordpress:
+        build:
+            context: ./requirements/wordpress
+            dockerfile: ./Dockerfile
+        container_name: wordpress
+        image: wordpress
+        depends_on:
+            - mariadb
+        restart: always
+        env_file:
+            - .env
+        volumes:
+            - vol_wordpress:/var/www/html/
+        expose:
+            - "9000"
+        networks:
+            - gaepo
+    mariadb:
+        build:
+            context: ./requirements/mariadb
+            dockerfile: ./Dockerfile
+        container_name: mariadb
+        image: mariadb
+        restart: always
+        env_file:
+          - .env
+        volumes:
+            - vol_mariadb:/var/lib/mysql
+        expose:
+            - "3306"
+        networks:
+            - gaepo
+
+networks:
+    gaepo:
+        driver: bridge
