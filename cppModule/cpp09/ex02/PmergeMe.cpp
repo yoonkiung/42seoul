@@ -275,8 +275,6 @@ void	PmergeMe::sorting(int ac)
 	mergeSortDeque(0, ac - 2);
 	end = clock();
 	_durationDeque = static_cast<double>(end - start) / 1000;
-	std::cout << "start " << start << std::endl;
-	std::cout << "end : " << end << std::endl;
 	start = clock();
 	mergeSortList(0, ac - 2);
 	end = clock();

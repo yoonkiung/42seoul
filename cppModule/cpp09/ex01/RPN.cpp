@@ -200,6 +200,8 @@ int	RPN::calculate()
 				return (0);
 		}
 	}
+	if (stack.size() != 1)
+		return (0);
 	std::cout << stack.top() << std::endl;
 	return (1);
 }

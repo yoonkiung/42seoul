@@ -124,7 +124,7 @@ int	BitcoinExchange::checkInfo(int year, int month, int day, double value, std::
 		printInputError(buffer);
 		return (0);
 	}
-	if (value < 0)
+	if (value <= 0)
 	{
 		std::cout << "Error: not a positive number." << std::endl;
 		return (0);
@@ -173,6 +173,8 @@ std::string BitcoinExchange::intToString(int value)
 
 void	BitcoinExchange::findData(int convert, double value)
 {
+	int	flag;
+
 	std::map<int, double>::iterator iter;
 
 	iter = bitcoin.find(convert);
@@ -182,14 +184,21 @@ void	BitcoinExchange::findData(int convert, double value)
 	}
 	else
 	{
+		flag = 0;
 		for (iter = bitcoin.begin(); iter != bitcoin.end(); iter++)
 		{
 			if (iter->first > convert)
 			{
 				iter--;
 				std::cout << this->intToString(convert) << " => " << value << " = " << iter->second * value << std::endl;
+				flag = 1;
 				break ;
 			}
+		}
+		if (!flag)
+		{
+			iter--;
+			std::cout << this->intToString(convert) << " => " << value << " = " << iter->second * value << std::endl;
 		}
 	}
 }
