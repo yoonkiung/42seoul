@@ -25,7 +25,6 @@ BitcoinExchange::~BitcoinExchange()
 	this->fs.close();
 }
 
-
 /*
 ** --------------------------------- OVERLOAD ---------------------------------
 */
@@ -44,9 +43,16 @@ BitcoinExchange &				BitcoinExchange::operator=( BitcoinExchange const & rhs )
 ** --------------------------------- METHODS ----------------------------------
 */
 
-void	BitcoinExchange::printInputError(std::string buff)
+int	BitcoinExchange::printNotPositive()
+{
+	std::cout << "Error: not a positive number." << std::endl;
+	return (0);
+}
+
+int	BitcoinExchange::printInputError(std::string buff)
 {
 	std::cout << "Error: bad input => " << buff << std::endl;
+	return (0);
 }
 
 void	BitcoinExchange::open_csv()
@@ -56,7 +62,8 @@ void	BitcoinExchange::open_csv()
 
 int	BitcoinExchange::power(int num, int i)
 {
-	int ret = 1;
+	int	ret = 1;
+
 	for (int j = 0; j < i; j++)
 		ret = ret * num;
 	return (ret);
@@ -65,10 +72,11 @@ int	BitcoinExchange::power(int num, int i)
 std::pair<int, double>	BitcoinExchange::parsing(std::string date)
 {
 	std::pair <int, double> p;
-	int	day = 0;
-	double	value = 0;
-	int	pos = 0;
-	int	temp_day;
+	int						day = 0;
+	double					value = 0;
+	int						pos = 0;
+	int						temp_day;
+
 	for (int i = 0; i < 2; i++)
 	{
 		pos = date.find("-");
@@ -77,7 +85,7 @@ std::pair<int, double>	BitcoinExchange::parsing(std::string date)
 		day = day + temp_day * this->power(10, (2 - i) * 2);
 		date.erase(0, pos + 1);
 	}
-	
+
 	pos = date.find(",");
 	std::stringstream _temp(date.substr(0, pos));
 	_temp >> temp_day;
@@ -95,40 +103,19 @@ std::pair<int, double>	BitcoinExchange::parsing(std::string date)
 int	BitcoinExchange::checkInfo(int year, int month, int day, double value, std::string buffer)
 {
 	if (year < 0 || month < 0 || day < 0)
-	{
-		std::cout << "Error: not a positive number." << std::endl;
-		return (0);
-	}
+		return (printNotPositive());
 	if (year < 2009)
-	{
-		printInputError(buffer);
-		return (0);
-	}
+		return (printInputError(buffer));
 	if (month > 12)
-	{
-		printInputError(buffer);
-		return (0);
-	}
+		return (printInputError(buffer));
 	if (month == 2 && day > 29)
-	{
-		printInputError(buffer);
-		return (0);
-	}
+		return (printInputError(buffer));
 	if ((month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) && day > 31)
-	{
-		printInputError(buffer);
-		return (0);
-	}
+		return (printInputError(buffer));
 	if ((month == 2 || month == 4 || month == 6 || month == 9 || month == 11) && day > 30)
-	{
-		printInputError(buffer);
-		return (0);
-	}
+		return (printInputError(buffer));
 	if (value <= 0)
-	{
-		std::cout << "Error: not a positive number." << std::endl;
-		return (0);
-	}
+		return (printNotPositive());
 	if (value > 1000)
 	{
 		std::cout << "Error: too large a number." << std::endl;
@@ -139,13 +126,13 @@ int	BitcoinExchange::checkInfo(int year, int month, int day, double value, std::
 
 std::string BitcoinExchange::intToString(int value)
 {
-	std::string ret;
-	std::string day_part;
-	std::string month_part;
-	std::string year_part;
-	int day;
-	int month;
-	int year;
+	std::string	ret;
+	std::string	day_part;
+	std::string	month_part;
+	std::string	year_part;
+	int 		day;
+	int 		month;
+	int 		year;
 
 	day = value % 100;
 	value = value / 100;
@@ -154,6 +141,7 @@ std::string BitcoinExchange::intToString(int value)
 	day_part = temp_day.str();
 	if (day_part.length() == 1)
 		day_part = "0" + day_part;
+
 	month = value % 100;
 	value = value / 100;
 	std::stringstream temp_month;
@@ -161,20 +149,18 @@ std::string BitcoinExchange::intToString(int value)
 	month_part = temp_month.str();
 	if (month_part.length() == 1)
 		month_part = "0" + month_part;
+
 	year = value;
 	std::stringstream temp_year;
 	temp_year << year;
 	year_part = temp_year.str();
 
 	ret = year_part + "-" + month_part + "-" + day_part;
-
 	return (ret);
 }
 
 void	BitcoinExchange::findData(int convert, double value)
 {
-	int	flag;
-
 	std::map<int, double>::iterator iter;
 
 	iter = bitcoin.find(convert);
@@ -184,22 +170,8 @@ void	BitcoinExchange::findData(int convert, double value)
 	}
 	else
 	{
-		flag = 0;
-		for (iter = bitcoin.begin(); iter != bitcoin.end(); iter++)
-		{
-			if (iter->first > convert)
-			{
-				iter--;
-				std::cout << this->intToString(convert) << " => " << value << " = " << iter->second * value << std::endl;
-				flag = 1;
-				break ;
-			}
-		}
-		if (!flag)
-		{
-			iter--;
-			std::cout << this->intToString(convert) << " => " << value << " = " << iter->second * value << std::endl;
-		}
+		iter = bitcoin.lower_bound(convert);
+		std::cout << this->intToString(convert) << " => " << value << " = " << (--iter)->second * value << std::endl;
 	}
 }
 
@@ -227,19 +199,21 @@ int	BitcoinExchange::vaildCheck(std::string buffer)
 
 void	BitcoinExchange::matchValue(std::string date)
 {
-	std::string buffer = date;
-	int	year;
-	int month;
-	int day;
-	int convert;
-	double	value;
-	size_t	pos = 0;
+	std::string	buffer = date;
+	int			year;
+	int 		month;
+	int 		day;
+	int 		convert;
+	double		value;
+	size_t		pos = 0;
+
 	if (!vaildCheck(date))
 		return ;
+
 	pos = date.find("-");
 	if (pos == std::string::npos)
 	{
-		this->printInputError(buffer);
+		printInputError(buffer);
 		return ;
 	}
 	std::stringstream temp_year(date.substr(0, pos));
@@ -250,22 +224,21 @@ void	BitcoinExchange::matchValue(std::string date)
 		this->printInputError(buffer);
 		return ;
 	}
+	
 	pos = date.find("-");
-
 	std::stringstream temp_month(date.substr(0, pos));
 	temp_month >> month;
 	date.erase(0, pos + 1);
-
 	pos = date.find(" ");
 	if (pos == std::string::npos)
 	{
 		this->printInputError(buffer);
 		return ;
 	}
+
 	std::stringstream temp_day(date.substr(0, pos));
 	temp_day >> day;
 	date.erase(0, pos + 1);
-
 	pos = date.find("|");
 	if (pos == std::string::npos)
 	{
@@ -285,6 +258,7 @@ void	BitcoinExchange::matchValue(std::string date)
 		this->printInputError(buffer);
 		return ;
 	}
+
 	std::stringstream temp(date);
 	temp >> value;
 	if (year == 0 || month == 0 || day == 0)
@@ -294,6 +268,7 @@ void	BitcoinExchange::matchValue(std::string date)
 	}
 	if (!this->checkInfo(year, month, day, value, buffer))
 		return ;
+
 	convert = year * power(10, 4) + month * power(10, 2) + day;
 	findData(convert, value);
 }
@@ -318,11 +293,6 @@ void	BitcoinExchange::printInfo(std::string filename)
 	}
 }
 
-
-/*
-** --------------------------------- ACCESSOR ---------------------------------
-*/
-
 void	BitcoinExchange::setMap()
 {
 	std::string buff;
@@ -336,6 +306,10 @@ void	BitcoinExchange::setMap()
 		this->bitcoin.insert(this->parsing(buff));
     }
 }
+
+/*
+** --------------------------------- ACCESSOR ---------------------------------
+*/
 
 std::map<int, double> BitcoinExchange::getbitcoin()
 {

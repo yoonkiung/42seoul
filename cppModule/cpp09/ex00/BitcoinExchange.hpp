@@ -15,25 +15,23 @@ class BitcoinExchange
 		BitcoinExchange();
 		BitcoinExchange( BitcoinExchange const & src );
 		~BitcoinExchange();
-		
-		void	printInputError(std::string buff);
-		void	open_csv();
-		int		power(int num, int i);
+
+		int						printNotPositive();
+		int						printInputError(std::string buff);
+		void					open_csv();
+		int						power(int num, int i);
 		std::pair<int, double>	parsing(std::string date);
-		int	checkInfo(int year, int month, int day, double value, std::string buffer);
-		std::string intToString(int value);
-		void	findData(int convert, double value);
-		int	vaildCheck(std::string buffer);
-
-		void	matchValue(std::string date);
-
-		void	printInfo(std::string filename);
-		BitcoinExchange &		operator=( BitcoinExchange const & rhs );
+		int						checkInfo(int year, int month, int day, double value, std::string buffer);
+		std::string 			intToString(int value);
+		void					findData(int convert, double value);
+		int						vaildCheck(std::string buffer);
+		void					matchValue(std::string date);
+		void					printInfo(std::string filename);
+		void					setMap();
 		
-	
+		BitcoinExchange &		operator=( BitcoinExchange const & rhs );
 
-		void	setMap();
-		std::map<int, double> getbitcoin();
+		std::map<int, double>	getbitcoin();
 
 
 	private:

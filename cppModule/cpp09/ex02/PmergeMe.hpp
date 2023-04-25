@@ -17,22 +17,23 @@ class PmergeMe
 		PmergeMe( PmergeMe const & src );
 		~PmergeMe();
 
+		void 			printTimeDeque(int ac);
+		void 			printTimeList(int ac);
+		void 			printSequence(std::string buffer);
+		int				setContainers(int ac, char **av);
+		int				setContainer(std::string av);
+		void			mergeList(int left, int mid, int right);
+		void			insertionSortList(int n, int start);
+		void			mergeSortList(int left, int right);
+		void			mergeDeque(int left, int mid, int right);
+		void			insertionSortDeque(int n, int start);
+		void			mergeSortDeque(int left, int right);
+		void			sorting(int ac);
+
 		PmergeMe &		operator=( PmergeMe const & rhs );
-		void printTimeDeque(int ac);
-		void printTimeList(int ac);
-		void printSequence(std::string buffer);
-		int	setContainers(int ac, char **av);
-		int	setContainer(std::string av);
-		void	mergeList(int left, int mid, int right);
-		void	insertionSortList(int n, int start);
-		void	mergeSortList(int left, int right);
-		void	mergeDeque(int left, int mid, int right);
-		void	insertionSortDeque(int n, int start);
-		void	mergeSortDeque(int left, int right);
-		void	sorting(int ac);
 		
-		std::deque<int> getDeque() const;
-		std::list<int> getList() const;
+		std::deque<int>	getDeque() const;
+		std::list<int>	getList() const;
 
 	private:
 		std::deque<int> _deque;

@@ -56,8 +56,8 @@ void PmergeMe::printTimeList(int ac)
 
 void PmergeMe::printSequence(std::string buffer)
 {
-	std::deque<int>::iterator iterDeque;
-	std::list<int>::iterator iterList;
+	std::deque<int>::iterator	iterDeque;
+	std::list<int>::iterator	iterList;
 
 	std::cout << buffer << ":\t";
 	for (iterDeque = _deque.begin(); iterDeque != _deque.end(); iterDeque++)
@@ -79,9 +79,9 @@ int	PmergeMe::setContainers(int ac, char **av)
 
 int	PmergeMe::setContainer(std::string av)
 {
-	std::string token;
-	std::stringstream iss(av);
-	long long temp;
+	std::string			token;
+	std::stringstream	iss(av);
+	long				temp;
 
 	while (iss >> temp)
 	{
@@ -95,11 +95,11 @@ int	PmergeMe::setContainer(std::string av)
 
 void	PmergeMe::mergeList(int left, int mid, int right)
 {
-	std::list<int>::iterator iterList, iterL, iterR;
-	int	i, j;
-	int n1 = mid - left + 1;
-    int n2 = right - mid;
-	std::list<int> L, R;
+	std::list<int>::iterator	iterList, iterL, iterR;
+	int							i, j;
+	int 						n1 = mid - left + 1;
+    int 						n2 = right - mid;
+	std::list<int> 				L, R;
 	
 	iterList = _list.begin();
 	for (j = 0; j < left; j++)
@@ -201,10 +201,10 @@ void	PmergeMe::mergeSortList(int left, int right)
 
 void	PmergeMe::mergeDeque(int left, int mid, int right)
 {
-	int	i, j, k;
-	int n1 = mid - left + 1;
-	int n2 = right - mid;
-	std::deque<int> L, R;
+	int				i, j, k;
+	int				n1 = mid - left + 1;
+	int				n2 = right - mid;
+	std::deque<int>	L, R;
 
 	for (i = 0; i < n1; i++)
 		L.push_back(_deque[left + i]);
@@ -295,6 +295,5 @@ std::list<int> PmergeMe::getList() const
 {
 	return (this->_list);
 }
-
 
 /* ************************************************************************** */
