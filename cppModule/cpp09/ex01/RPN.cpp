@@ -113,11 +113,11 @@ int	RPN::check()
 
 int	RPN::isInInt(int a, int b, std::string oper)
 {
-	long long long_a;
-	long long long_b;
+	long long_a;
+	long long_b;
 
-	long_a = static_cast<long long>(a);
-	long_b = static_cast<long long>(b);
+	long_a = static_cast<long>(a);
+	long_b = static_cast<long>(b);
 
 	if (oper == "+")
 	{
@@ -233,4 +233,5 @@ std::vector<std::string>  RPN::getToken() const
 {
 	return (this->_token);
 }
+
 /* ************************************************************************** */
