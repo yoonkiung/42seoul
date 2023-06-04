@@ -17,3 +17,4 @@
 * minRT
 * CPP Module(00 ~ 08)
 * Inception
+* ft_irc (with daechoi)
